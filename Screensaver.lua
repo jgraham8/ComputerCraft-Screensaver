@@ -1,40 +1,79 @@
 local mon = peripheral.find("monitor")
 
-local timeWindow = window.create(term.current(), 1,1,65,30)
+local timeWindow = window.create(term.current(), 1, 1, 65, 30)
 timeWindow.setBackgroundColour(colours.white)
 timeWindow.setTextColour(colours.black)
 term.redirect(timeWindow)
 
-function drawWindow()
-    timeWindow.setCursorPos(1,1)
+function DrawWindow()
+    timeWindow.setCursorPos(1, 1)
     timeWindow.clear()
     print(
-        textutils.tabulate(
-            colours.black,
-            {
-                "Ingame:",
-                textutils.formatTIme(os.time(), true),
-                checkTime( os.time() )
-            },
-            colours.black,
-            {
-                "real:",
-                textutils.formatTIme(os.time("local"), true),
-                checkTime( os.time("local") )
-            }
-        )
+        CheckTime(os.time(), "Ingame:"),
+        CheckTime(os.time("local"), "Real:")
     )
 end
 
-function checkTime( t )
-    if t > 6 and t < 18 then
-        return "day"
+function CheckTime(time, type)
+    if time > 6 and time < 18 then
+        return {
+            textutils.tabulate(
+                colours.black,
+                {
+                    type
+                },
+                colours.black,{
+                    time
+                }
+            ),
+            textutils.tabulate(
+                colours.yellow,
+                {
+                    "  |",                   
+                },
+                colours.yellow,
+                {
+                    "\\ | /",
+                },
+                colours.yellow,
+                {
+                    "\\\\*//",                   
+                },
+                colours.yellow,
+                {
+                    "-*O*-",                   
+                },
+                colours.yellow,
+                {
+                    "//*\\\\",
+                },
+                colours.yellow,
+                {
+                    "/ | \\",                  
+                },
+                colours.yellow,
+                {
+                    "  |",                   
+                }
+            )
+        }
     end
-    return "night"
+    return {
+        textutils.tabulate(
+            colours.black,
+            {
+                type,
+            },
+            colours.black,
+            {
+                time
+            }
+        )
+    }
 end
 
 while true do
-    drawWindow()
+    DrawWindow()
     sleep(0.75)
     timeWindow.redraw()
 end
